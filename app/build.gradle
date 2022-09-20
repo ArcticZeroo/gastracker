@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "io.frozor.gastracker"
-        minSdk 30
-        targetSdk 31
+        minSdk 32
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -44,6 +44,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'io.frozor.gastracker'
 }
 
 dependencies {
