@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "io.frozor.gastracker"
@@ -75,4 +75,6 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     // End Room
+
+    implementation "com.google.accompanist:accompanist-permissions:0.26.3-beta"
 }

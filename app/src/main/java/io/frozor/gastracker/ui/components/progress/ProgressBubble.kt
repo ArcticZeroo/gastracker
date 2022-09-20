@@ -10,6 +10,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +46,9 @@ fun ProgressBubble(status: ProgressState) {
                 )
             }
             ProgressState.NOT_STARTED -> {
-
+                Icon(Icons.Outlined.AddCircle,
+                    contentDescription = "Action not started",
+                    modifier = Modifier.fillMaxSize())
             }
             ProgressState.IN_PROGRESS -> {
                 CircularProgressIndicator(
