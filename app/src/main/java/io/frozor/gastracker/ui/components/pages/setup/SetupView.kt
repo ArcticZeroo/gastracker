@@ -39,14 +39,22 @@ fun SetupView() {
         Card(modifier = Modifier.padding(Styles.DefaultPadding)) {
             Column {
                 ProgressBubble(status = getProgressStateFromPermissions(requiredPermissionsState))
+
                 if (!requiredPermissionsState.allPermissionsGranted) {
-                    Log.i(LoggingTag.App, "Are all permissions granted: ${requiredPermissionsState.allPermissionsGranted}, revoked count: ${requiredPermissionsState.revokedPermissions.map { it.permission }}")
                     Text("We need to request some more permissions from you!")
+
+                    Text("Here's the permissions we still need:")
+                    for (missingPermission in requiredPermissionsState.revokedPermissions) {
+                        Text("- ${missingPermission.permission}")
+                    }
+
                     Button(onClick = {
                         requiredPermissionsState.launchMultiplePermissionRequest()
                     }) {
-                        Text("Gimme permissions")
+                        Text("Launch permissions window")
                     }
+                } else {
+                    Text("We have all the permissions! Let's find your bluetooth device.")
                 }
             }
         }

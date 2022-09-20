@@ -5,21 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class PermissionsViewModel : ViewModel() {
-    private val _canControlBluetooth = MutableLiveData(false)
-    private val _bleBeaconId = MutableLiveData("")
+    private val _hasRequiredPermissions = MutableLiveData(false)
+    private val _bluetoothDeviceId = MutableLiveData("")
 
-    val canControlBluetooth: LiveData<Boolean> = _canControlBluetooth
-    val bleBeaconId: LiveData<String> = _bleBeaconId
+    val hasRequiredPermissions: LiveData<Boolean> = _hasRequiredPermissions
+    val bluetoothDeviceId: LiveData<String> = _bluetoothDeviceId
 
     fun onCanControlBluetoothChanged(canControlBluetooth: Boolean) {
-        _canControlBluetooth.value = canControlBluetooth
+        _hasRequiredPermissions.value = canControlBluetooth
     }
 
     fun onBleBeaconIdChanged(bleBeaconId: String) {
-        _bleBeaconId.value = bleBeaconId
+        _bluetoothDeviceId.value = bleBeaconId
     }
 
-    fun requiresSetup() {
-
+    fun requiresSetup(): Boolean {
+        return (_hasRequiredPermissions.value ?: false)
+                && (_bluetoothDeviceId.value?.isNotEmpty() ?: false)
     }
 }
