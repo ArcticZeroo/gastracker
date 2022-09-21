@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,15 +24,19 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 
 @Composable
-fun BluetoothDeviceScanner(onDeviceSelected: (BluetoothDevice) -> Unit) {
+fun BluetoothDeviceScanner(onDeviceSelected: (BluetoothDevice, Boolean) -> Unit) {
     val context = LocalContext.current
 
-    var showOnlyNamedDevices by remember { mutableStateOf(false) }
-    var foundDevices by remember { mutableStateOf(listOf<BluetoothDevice>()) }
+    var showOnlyNamedDevices by rememberSaveable { mutableStateOf(false) }
+    var allFoundDevices by rememberSaveable { mutableStateOf(listOf<BluetoothDevice>()) }
+    var foundDevicesToShow by remember { mutableStateOf(listOf<BluetoothDevice>()) }
 
     val bluetoothManager = remember {
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     }
+
+    val allPairedDevices = remember { bluetoothManager.adapter.bondedDevices }
+    var pairedDevicesToShow by remember { mutableStateOf(listOf<BluetoothDevice>()) }
 
     LaunchedEffect(Unit) {
         if (ActivityCompat.checkSelfPermission(
@@ -44,6 +48,20 @@ fun BluetoothDeviceScanner(onDeviceSelected: (BluetoothDevice) -> Unit) {
         }
     }
 
+    LaunchedEffect(allFoundDevices, allPairedDevices) {
+        val newFoundDevicesToShow = ArrayList<BluetoothDevice>()
+        val newPairedDevicesToShow = ArrayList<BluetoothDevice>()
+        for (foundDevice in allFoundDevices) {
+            if (allPairedDevices.contains(foundDevice)) {
+                newPairedDevicesToShow.add(foundDevice)
+            } else {
+                newFoundDevicesToShow.add(foundDevice)
+            }
+        }
+        foundDevicesToShow = newFoundDevicesToShow
+        pairedDevicesToShow = newPairedDevicesToShow
+    }
+
     DisposableEffect(context) {
         val intentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
 
@@ -51,7 +69,7 @@ fun BluetoothDeviceScanner(onDeviceSelected: (BluetoothDevice) -> Unit) {
             override fun onReceive(context: Context, intent: Intent) {
                 val device: BluetoothDevice =
                     intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
-                foundDevices = foundDevices.plus(device)
+                allFoundDevices = allFoundDevices.plus(device)
             }
         }
 
@@ -75,5 +93,10 @@ fun BluetoothDeviceScanner(onDeviceSelected: (BluetoothDevice) -> Unit) {
             checked = showOnlyNamedDevices,
             onCheckedChange = { value -> showOnlyNamedDevices = value })
     }
-    BluetoothDeviceList(showOnlyNamedDevices, foundDevices, onDeviceSelected)
+    BluetoothDeviceList(
+        showOnlyNamedDevices,
+        pairedDevices = pairedDevicesToShow,
+        foundDevices = foundDevicesToShow,
+        onDeviceSelected = { device -> onDeviceSelected(device, allPairedDevices.contains(device)) }
+    )
 }

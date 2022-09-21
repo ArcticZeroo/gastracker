@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BluetoothDeviceList(
     showOnlyNamedDevices: Boolean,
+    pairedDevices: List<BluetoothDevice>,
     foundDevices: List<BluetoothDevice>,
     onDeviceSelected: (BluetoothDevice) -> Unit
 ) {
@@ -30,23 +32,24 @@ fun BluetoothDeviceList(
         }
     }
 
-    LazyColumn {
-        items(devicesToShow) { bluetoothDevice ->
-            val displayName = bluetoothDevice.name
-                ?: bluetoothDevice.alias
-                ?: bluetoothDevice.address
-                ?: "Unknown device"
+    Column(modifier = Modifier.padding(16.dp)) {
+        if (pairedDevices.isNotEmpty()) {
+            Text("Paired Devices")
 
-            Text(
-                displayName,
-                modifier = Modifier
-                    .clickable {
-                        onDeviceSelected(bluetoothDevice)
-                    }
-                    .padding(16.dp)
-                    .fillMaxWidth()
+            LazyColumn {
+                items(pairedDevices) { bluetoothDevice ->
+                    BluetoothDeviceListItem(bluetoothDevice, onDeviceSelected)
+                }
+            }
 
-            )
+            Divider()
+        }
+
+        Text("New Devices")
+        LazyColumn {
+            items(devicesToShow) { bluetoothDevice ->
+                BluetoothDeviceListItem(bluetoothDevice, onDeviceSelected)
+            }
         }
     }
 }

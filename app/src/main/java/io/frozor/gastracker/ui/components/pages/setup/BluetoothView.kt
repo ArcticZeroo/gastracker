@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 @Composable
 fun BluetoothView() {
     val context = LocalContext.current
-    BluetoothDeviceScanner {
-        Toast.makeText(context, "Selected ${it.name ?: "Unknown device"}", Toast.LENGTH_LONG).show()
+    BluetoothDeviceScanner { device, isAlreadyPaired ->
+        Toast.makeText(context, "Selected ${device.name ?: "Unknown device"}${if (isAlreadyPaired) ", already paired" else ", not yet paired"}", Toast.LENGTH_LONG).show()
     }
 }
