@@ -1,4 +1,4 @@
-package io.frozor.gastracker.ui.components.pages.setup
+package io.frozor.gastracker.ui.components.pages.setup.bluetooth.obd
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice

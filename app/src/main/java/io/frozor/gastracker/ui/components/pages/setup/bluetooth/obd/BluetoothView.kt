@@ -1,9 +1,10 @@
-package io.frozor.gastracker.ui.components.pages.setup
+package io.frozor.gastracker.ui.components.pages.setup.bluetooth.obd
 
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import io.frozor.gastracker.ui.components.pages.setup.bluetooth.obd.BluetoothDeviceScanner
 
 @SuppressLint("MissingPermission")
 @Composable
