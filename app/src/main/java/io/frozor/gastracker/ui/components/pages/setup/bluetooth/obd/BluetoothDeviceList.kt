@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.frozor.gastracker.ui.components.pages.setup.bluetooth.common.BluetoothDeviceListItem
 
 @SuppressLint("MissingPermission")
 @Composable

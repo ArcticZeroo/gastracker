@@ -3,8 +3,9 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+    <!-- Apparently some BLE beacons are filtered out when we use this -->
+<!--        android:usesPermissionFlags="neverForLocation"/>-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <!-- Required for initiating device discovery, apparently -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>

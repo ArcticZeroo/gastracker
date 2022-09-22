@@ -1,4 +1,4 @@
-package io.frozor.gastracker.ui.components.pages.setup.bluetooth.obd
+package io.frozor.gastracker.ui.components.pages.setup.bluetooth.common
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
@@ -9,17 +9,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.frozor.gastracker.util.getDisplayName
 
 @SuppressLint("MissingPermission")
 @Composable
 fun BluetoothDeviceListItem(bluetoothDevice: BluetoothDevice, onDeviceSelected: (BluetoothDevice) -> Unit) {
-    val displayName = bluetoothDevice.name
-        ?: bluetoothDevice.alias
-        ?: bluetoothDevice.address
-        ?: "Unknown device"
-
     Text(
-        displayName,
+        getDisplayName(bluetoothDevice),
         modifier = Modifier
             .clickable {
                 onDeviceSelected(bluetoothDevice)

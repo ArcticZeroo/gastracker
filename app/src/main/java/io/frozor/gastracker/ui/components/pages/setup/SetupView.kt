@@ -17,6 +17,7 @@ import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.constants.Styles
 import io.frozor.gastracker.constants.requiredForegroundPermissions
 import io.frozor.gastracker.ui.components.pages.PageContainer
+import io.frozor.gastracker.ui.components.pages.setup.bluetooth.le.BluetoothLeView
 import io.frozor.gastracker.ui.components.pages.setup.bluetooth.obd.BluetoothView
 
 @Composable
@@ -34,8 +35,8 @@ fun SetupView() {
                     Text("Step 1 of 2: Grant permissions", fontSize = 24.sp)
                     PermissionsView(requiredPermissionsState = requiredPermissionsState)
                 } else {
-                    Text("Step 2 of 2: Pair your device", fontSize = 24.sp)
-                    BluetoothView()
+                    Text("Step 2 of 2: Choose your device", fontSize = 24.sp)
+                    BluetoothLeView()
                 }
             }
         }
