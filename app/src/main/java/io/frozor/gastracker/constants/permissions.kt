@@ -9,7 +9,5 @@ val requiredForegroundPermissions = listOf(
 )
 
 val requiredBackgroundPermissions = listOf(
-    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-    Manifest.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND,
-    Manifest.permission.REQUEST_COMPANION_USE_DATA_IN_BACKGROUND,
+    Manifest.permission.ACCESS_BACKGROUND_LOCATION
 )

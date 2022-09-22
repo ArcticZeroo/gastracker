@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GasTrackerTheme {
-                val appState = remember { AppState() }
+                val appState = remember { AppState(applicationContext) }
 
                 // A surface container using the 'background' color from the theme
                 Surface(

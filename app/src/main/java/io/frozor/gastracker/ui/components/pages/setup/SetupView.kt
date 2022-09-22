@@ -30,11 +30,6 @@ fun SetupView(appState: AppState) {
     val requiredPermissionsState =
         rememberMultiplePermissionsState(permissions = requiredForegroundPermissions)
 
-    val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        appState.retrieveDeviceId(context)
-    }
-
     val hasDeviceIdBeenFetched by appState.hasDeviceIdBeenFetched.observeAsState()
     val deviceId by appState.deviceId.observeAsState()
 
@@ -52,7 +47,7 @@ fun SetupView(appState: AppState) {
                     Text("Step 2 of 2: Choose your device", fontSize = 24.sp)
                     BluetoothLeView(appState)
                 } else {
-                    Text("That's everything! You have selected device $deviceId")
+                    Text("Something went wrong. You should be home right now!")
                 }
             }
         }

@@ -112,7 +112,7 @@ fun BluetoothLeDeviceScanner(appState: AppState) {
                 Toast.LENGTH_SHORT
             ).show()
 
-            appState.onDeviceIdChanged(context, it.address)
+            appState.onDeviceIdChanged(it.address)
         }
     }
 }

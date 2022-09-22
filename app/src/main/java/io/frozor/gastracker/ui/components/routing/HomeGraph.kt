@@ -15,19 +15,8 @@ import io.frozor.gastracker.util.popToParent
 
 fun NavGraphBuilder.homeGraph(navController: NavController, appState: AppState) {
     navigation(startDestination = Routes.Home.Main, route = Routes.Pages.Home) {
-        Log.i(LoggingTag.App, "Rendering home graph")
         composable(Routes.Home.Main) {
-            Log.i(LoggingTag.App, "Rendering home page")
-            // TODO: Put this somehow in state
-            val shouldRunSetup = true
-            if (shouldRunSetup) {
-                navController.navigate(Routes.Pages.Setup) {
-                    popUpTo(0)
-                }
-            }
-            else {
-                HomeMain()
-            }
+            HomeMain()
         }
     }
 }

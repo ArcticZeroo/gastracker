@@ -6,3 +6,6 @@ import androidx.core.content.ContextCompat
 
 fun hasPermission(context: Context, permission: String) =
     ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+
+fun hasPermissions(context: Context, permissions: List<String>) =
+    permissions.all { hasPermission(context, it) }

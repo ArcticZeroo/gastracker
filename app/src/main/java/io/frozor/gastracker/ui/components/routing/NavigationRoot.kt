@@ -11,7 +11,8 @@ import io.frozor.gastracker.ui.state.AppState
 @Composable
 fun NavigationRoot(appState: AppState) {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Routes.Pages.Home) {
+    NavHost(navController = navController, startDestination = Routes.Pages.InitialLoading) {
+        initialLoadingPageGraph(navController, appState)
         homeGraph(navController, appState)
         setupGraph(navController, appState)
     }
