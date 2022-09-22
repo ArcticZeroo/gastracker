@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import io.frozor.gastracker.constants.ProgressState
 import io.frozor.gastracker.ui.theme.md_green_400
 
-val BUBBLE_SIZE = 48.dp
+val BUBBLE_SIZE = 24.dp
 val PROGRESS_STROKE_WIDTH = BUBBLE_SIZE / 8
 
 @Composable
