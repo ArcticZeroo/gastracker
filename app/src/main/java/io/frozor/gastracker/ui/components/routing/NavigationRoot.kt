@@ -6,12 +6,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.constants.Routes
+import io.frozor.gastracker.ui.state.AppState
 
 @Composable
-fun NavigationRoot() {
+fun NavigationRoot(appState: AppState) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.Pages.Home) {
-        homeGraph(navController)
-        setupGraph(navController)
+        homeGraph(navController, appState)
+        setupGraph(navController, appState)
     }
 }

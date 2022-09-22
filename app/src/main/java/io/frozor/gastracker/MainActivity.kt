@@ -9,12 +9,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.ui.components.routing.NavigationRoot
+import io.frozor.gastracker.ui.state.AppState
 import io.frozor.gastracker.ui.theme.GasTrackerTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,12 +24,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GasTrackerTheme {
+                val appState = remember { AppState() }
+
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    NavigationRoot()
+                    NavigationRoot(appState)
                 }
             }
         }
