@@ -70,35 +70,31 @@ fun HomeDeviceScanView(appState: AppState) {
         }
     }
 
-    PageContainer {
-        Card(modifier = Modifier.padding(16.dp)) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                if (isScanning) {
-                    Text("Scanning for your device...")
-                }
+    Column(modifier = Modifier.padding(16.dp)) {
+        if (isScanning) {
+            Text("Scanning for your device...")
+        }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    ProgressBubble(
-                        status = getProgressFromScanState(
-                            hasEverScanned = hasEverScanned,
-                            isScanning = isScanning,
-                            isDeviceNearby = isDeviceNearby
-                        )
-                    )
-                    if (isDeviceNearby) {
-                        Text("Your device is nearby!")
-                    } else if (!isScanning) {
-                        Text("Your device was not found nearby.")
-                    }
-                }
-
-                if (hasEverScanned && !isScanning) {
-                    Text("Next scan in ${nextScan.inWholeSeconds} second(s)")
-                }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ProgressBubble(
+                status = getProgressFromScanState(
+                    hasEverScanned = hasEverScanned,
+                    isScanning = isScanning,
+                    isDeviceNearby = isDeviceNearby
+                )
+            )
+            if (isDeviceNearby) {
+                Text("Your device is nearby!")
+            } else if (!isScanning) {
+                Text("Your device was not found nearby.")
             }
+        }
+
+        if (hasEverScanned && !isScanning) {
+            Text("Next scan in ${nextScan.inWholeSeconds} second(s)")
         }
     }
 }
