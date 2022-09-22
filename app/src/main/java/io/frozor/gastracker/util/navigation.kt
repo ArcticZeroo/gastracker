@@ -9,8 +9,11 @@ fun NavOptionsBuilder.popToParent(navController: NavController, builder: PopUpTo
     popUpTo(navController.graph.findStartDestination().id, builder)
 }
 
-fun NavController.navigateAndReplace(route: String) {
+fun NavController.navigateAndReplace(route: String, replaceStartDestination: Boolean = false) {
     navigate(route) {
         popUpTo(0)
+        if (replaceStartDestination) {
+            graph.setStartDestination(route)
+        }
     }
 }

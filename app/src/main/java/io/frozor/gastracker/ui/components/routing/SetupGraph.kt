@@ -11,7 +11,7 @@ import io.frozor.gastracker.ui.state.AppState
 fun NavGraphBuilder.setupGraph(navController: NavController, appState: AppState) {
     navigation(startDestination = Routes.Setup.Main, route = Routes.Pages.Setup) {
         composable(Routes.Setup.Main) {
-            SetupView(appState)
+            SetupView(navController, appState)
         }
     }
 }

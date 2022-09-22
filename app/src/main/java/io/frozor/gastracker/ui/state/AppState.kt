@@ -3,15 +3,16 @@
 package io.frozor.gastracker.ui.state
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import io.frozor.gastracker.api.storage.settings.getDeviceId
 import io.frozor.gastracker.api.storage.settings.setDeviceId
+import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.constants.requiredForegroundPermissions
 import io.frozor.gastracker.util.hasPermissions
 import kotlinx.coroutines.flow.first
@@ -22,12 +23,15 @@ class AppState(private val context: Context) {
     private var _isDeviceIdBeingFetched = false
     private val _hasDeviceIdBeenFetched = MutableLiveData(false)
     private val _deviceId = MutableLiveData<String?>(null)
+    private val _areAllPermissionsGranted = MutableLiveData(false)
 
     val hasDeviceIdBeenFetched: LiveData<Boolean> = _hasDeviceIdBeenFetched
     val deviceId: LiveData<String?> = _deviceId
+    val areAllPermissionsGranted: LiveData<Boolean> = _areAllPermissionsGranted
 
     init {
         retrieveDeviceId()
+        updatePermissionStatus()
     }
 
     private fun deviceIdLock() = this
@@ -42,6 +46,12 @@ class AppState(private val context: Context) {
         }
     }
 
+    fun updatePermissionStatus() {
+        Log.i(LoggingTag.App, "Updating permission state")
+        _areAllPermissionsGranted.value = hasPermissions(context, requiredForegroundPermissions)
+        Log.i(LoggingTag.App, "Are all permissions granted: ${_areAllPermissionsGranted.value}")
+    }
+
     private fun retrieveDeviceId() {
         synchronized(deviceIdLock()) {
             if (_isDeviceIdBeingFetched || _hasDeviceIdBeenFetched.value == true) {
@@ -50,7 +60,6 @@ class AppState(private val context: Context) {
             _isDeviceIdBeingFetched = true
         }
 
-        // Bleh. JS vibes.
         runBlocking {
             launch {
                 val deviceId = getDeviceId(context).first()
@@ -74,11 +83,14 @@ class AppState(private val context: Context) {
         return hasDeviceIdBeenFetched != true
     }
 
-    @Composable
-    fun shouldRunSetup(): Boolean {
-        val deviceId by this.deviceId.observeAsState()
-        val permissionsState = rememberMultiplePermissionsState(permissions = requiredForegroundPermissions)
+    fun shouldRunSetup(): Boolean =
+        areAllPermissionsGranted.value != true || this.deviceId.value == null
 
-        return !permissionsState.allPermissionsGranted || deviceId == null
+    @Composable
+    fun shouldRunSetupAsState(): Boolean {
+        val deviceId by this.deviceId.observeAsState()
+        val areAllPermissionsGranted by this.areAllPermissionsGranted.observeAsState()
+
+        return areAllPermissionsGranted != true || deviceId == null
     }
 }
