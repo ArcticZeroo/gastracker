@@ -7,14 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import io.frozor.gastracker.ui.state.AppState
 
 @Composable
-fun BluetoothLeView() {
-    val context = LocalContext.current
-
+fun BluetoothLeView(appState: AppState) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Let's find your device!")
         Text("Please choose your beacon from the list below.")
-        BluetoothLeDeviceScanner(context)
+        BluetoothLeDeviceScanner(appState)
     }
 }

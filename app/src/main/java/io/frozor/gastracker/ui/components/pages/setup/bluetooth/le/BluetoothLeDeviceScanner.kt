@@ -19,8 +19,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.ui.data.BleDevice
+import io.frozor.gastracker.ui.state.AppState
 import io.frozor.gastracker.util.isIBeacon
 
 // probably not needed, I can just use the keBeacon app
@@ -29,7 +31,9 @@ import io.frozor.gastracker.util.isIBeacon
 
 @SuppressLint("MissingPermission")
 @Composable
-fun BluetoothLeDeviceScanner(context: Context) {
+fun BluetoothLeDeviceScanner(appState: AppState) {
+    val context = LocalContext.current
+
     var showOnlyNamedDevices by rememberSaveable { mutableStateOf(false) }
     var foundDevices by rememberSaveable { mutableStateOf<Set<BleDevice>>(setOf()) }
     var didScanFail by rememberSaveable { mutableStateOf(false) }
@@ -107,6 +111,8 @@ fun BluetoothLeDeviceScanner(context: Context) {
                 "Selected ${it.name ?: it.address ?: "Unknown"}",
                 Toast.LENGTH_SHORT
             ).show()
+
+            appState.onDeviceIdChanged(context, it.address)
         }
     }
 }

@@ -50,9 +50,9 @@ fun SetupView(appState: AppState) {
                     Text("Checking if you've already set up a device...")
                 } else if (deviceId == null) {
                     Text("Step 2 of 2: Choose your device", fontSize = 24.sp)
-                    BluetoothLeView()
+                    BluetoothLeView(appState)
                 } else {
-                    Text("That's everything!")
+                    Text("That's everything! You have selected device $deviceId")
                 }
             }
         }

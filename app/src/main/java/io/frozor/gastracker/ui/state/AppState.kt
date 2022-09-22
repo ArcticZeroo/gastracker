@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.frozor.gastracker.api.storage.settings.getDeviceId
+import io.frozor.gastracker.api.storage.settings.setDeviceId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -16,9 +17,14 @@ class AppState {
     val hasDeviceIdBeenFetched: LiveData<Boolean> = _isDeviceIdFetched
     val deviceId: LiveData<String?> = _deviceId
 
-    fun onDeviceIdChanged(deviceId: String?) {
+    fun onDeviceIdChanged(context: Context, deviceId: String?) {
         _isDeviceIdFetched.value = true
         _deviceId.value = deviceId
+        runBlocking {
+            launch {
+                setDeviceId(context, deviceId)
+            }
+        }
     }
 
     fun retrieveDeviceId(context: Context) {

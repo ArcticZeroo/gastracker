@@ -12,5 +12,11 @@ val KEY_DEVICE_ID = stringPreferencesKey("btDeviceUuid")
 val Context.settingsDataStore by preferencesDataStore(DATA_STORE_NAME)
 
 fun getDeviceId(context: Context) = context.settingsDataStore.data.map { it[KEY_DEVICE_ID] }
-suspend fun setDeviceId(context: Context, deviceId: String) =
-    context.settingsDataStore.edit { it[KEY_DEVICE_ID] = deviceId }
+suspend fun setDeviceId(context: Context, deviceId: String?) =
+    context.settingsDataStore.edit {
+        if (deviceId == null) {
+            it.remove(KEY_DEVICE_ID)
+        } else {
+            it[KEY_DEVICE_ID] = deviceId
+        }
+    }

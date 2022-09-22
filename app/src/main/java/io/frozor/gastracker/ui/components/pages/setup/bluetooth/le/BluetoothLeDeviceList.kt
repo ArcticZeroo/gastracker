@@ -33,7 +33,9 @@ fun BluetoothLeDeviceList(
             BluetoothLeDeviceListItem(
                 bleDevice = device,
                 isFirst = index == 0
-            )
+            ) {
+                onDeviceSelected(device)
+            }
         }
     }
 }
