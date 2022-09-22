@@ -53,10 +53,6 @@ fun BluetoothLeDeviceScanner(appState: AppState) {
                     return
                 }
 
-                if (result.scanRecord?.deviceName == "Neigh") {
-                    Log.i(LoggingTag.App, "Found neigh!")
-                }
-
                 val bleDevice = BleDevice(
                     address = device.address,
                     name = result.scanRecord?.deviceName,

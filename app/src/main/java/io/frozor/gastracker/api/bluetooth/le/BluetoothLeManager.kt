@@ -19,7 +19,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlin.time.Duration.Companion.seconds
 
-val SCAN_LENGTH = 15.seconds
+val SCAN_LENGTH = 5.seconds
 val SCAN_INTERVAL = 60.seconds
 
 class BluetoothLeManager(private val context: Context) {
