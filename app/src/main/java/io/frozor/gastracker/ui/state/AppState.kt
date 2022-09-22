@@ -10,6 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import io.frozor.gastracker.api.bluetooth.le.BluetoothLeManager
 import io.frozor.gastracker.api.storage.settings.getDeviceId
 import io.frozor.gastracker.api.storage.settings.setDeviceId
 import io.frozor.gastracker.constants.LoggingTag
@@ -20,6 +21,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class AppState(private val context: Context) {
+    val bluetoothLeManager = BluetoothLeManager(context)
+
     private var _isDeviceIdBeingFetched = false
     private val _hasDeviceIdBeenFetched = MutableLiveData(false)
     private val _deviceId = MutableLiveData<String?>(null)
@@ -35,6 +38,14 @@ class AppState(private val context: Context) {
     }
 
     private fun deviceIdLock() = this
+
+    fun onStart() {
+        bluetoothLeManager.onStart()
+    }
+
+    fun onStop() {
+        bluetoothLeManager.onStop()
+    }
 
     fun onDeviceIdChanged(deviceId: String?) {
         _hasDeviceIdBeenFetched.value = true

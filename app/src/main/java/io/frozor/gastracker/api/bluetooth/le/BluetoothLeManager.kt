@@ -1,12 +1,18 @@
 package io.frozor.gastracker.api.bluetooth.le
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.async
@@ -20,6 +26,32 @@ class BluetoothLeManager(private val context: Context) {
     private val _bluetoothManager = context.getSystemService(BluetoothManager::class.java)
     private val _bluetoothLeScanner = _bluetoothManager.adapter.bluetoothLeScanner
     private var _currentScanJob: Deferred<Boolean>? = null
+    private val _isBluetoothEnabled = MutableLiveData(_bluetoothManager.adapter.isEnabled)
+
+    private val _btAdapterBroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val state = intent?.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                ?: return
+
+            when (state) {
+                BluetoothAdapter.STATE_OFF -> _isBluetoothEnabled.value = false
+                BluetoothAdapter.STATE_ON -> _isBluetoothEnabled.value = true
+            }
+        }
+    }
+
+    val isEnabled: LiveData<Boolean> = _isBluetoothEnabled
+
+    fun onStart() {
+        context.registerReceiver(
+            _btAdapterBroadcastReceiver,
+            IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        )
+    }
+
+    fun onStop() {
+        context.unregisterReceiver(_btAdapterBroadcastReceiver)
+    }
 
     private suspend fun doIsDeviceNearbyScan(deviceId: String): Boolean {
         if (ContextCompat.checkSelfPermission(

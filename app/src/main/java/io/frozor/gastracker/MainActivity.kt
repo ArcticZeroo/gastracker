@@ -20,18 +20,32 @@ import io.frozor.gastracker.ui.state.AppState
 import io.frozor.gastracker.ui.theme.GasTrackerTheme
 
 class MainActivity : ComponentActivity() {
+    var appState: AppState? = null
+
+    override fun onStart() {
+        super.onStart()
+        appState = AppState(context = applicationContext)
+        appState?.onStart()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appState?.onStop()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (appState == null) {
+            appState = AppState(applicationContext)
+        }
         setContent {
             GasTrackerTheme {
-                val appState = remember { AppState(applicationContext) }
-
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    NavigationRoot(appState)
+                    NavigationRoot(appState!!)
                 }
             }
         }
