@@ -57,7 +57,7 @@ class BluetoothLeManager(private val context: Context) {
         context.unregisterReceiver(_btAdapterBroadcastReceiver)
     }
 
-    suspend fun isDeviceNearby(deviceId: String): Boolean {
+    private suspend fun doNearbyCheckNoTimeout(deviceId: String): Boolean {
         Log.i(LoggingTag.Bluetooth, "Checking if device is nearby with id $deviceId")
 
         if (ContextCompat.checkSelfPermission(
@@ -68,7 +68,7 @@ class BluetoothLeManager(private val context: Context) {
             return false
         }
 
-        return suspendCoroutine { continuation ->
+        return suspendCancellableCoroutine { continuation ->
             var isScanOver = false
 
             val scanCallback = object : ScanCallback() {
@@ -111,14 +111,19 @@ class BluetoothLeManager(private val context: Context) {
 
             _bluetoothLeScanner.startScan(listOf(scanFilter), scanSettings, scanCallback)
 
-            CoroutineScope(Dispatchers.Main).launch {
-                delay(SCAN_LENGTH)
+            continuation.invokeOnCancellation {
                 if (!isScanOver) {
                     isScanOver = true
-                    continuation.resume(false)
                     _bluetoothLeScanner.stopScan(scanCallback)
                 }
             }
         }
+    }
+
+    suspend fun isDeviceNearby(deviceId: String): Boolean {
+        val foundDeviceOrNull = withTimeoutOrNull(SCAN_LENGTH) {
+            doNearbyCheckNoTimeout(deviceId)
+        }
+        return foundDeviceOrNull ?: false
     }
 }
