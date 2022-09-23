@@ -1,21 +1,18 @@
 package io.frozor.gastracker.ui.components.pages.home
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Card
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import io.frozor.gastracker.api.bluetooth.le.SCAN_INTERVAL
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.constants.ProgressState
-import io.frozor.gastracker.ui.components.pages.PageContainer
 import io.frozor.gastracker.ui.components.progress.ProgressBubble
 import io.frozor.gastracker.ui.state.AppState
 import kotlinx.coroutines.delay
@@ -71,13 +68,9 @@ fun HomeDeviceScanView(appState: AppState) {
     }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        if (isScanning) {
-            Text("Scanning for your device...")
-        }
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth()
         ) {
             ProgressBubble(
                 status = getProgressFromScanState(
@@ -86,14 +79,28 @@ fun HomeDeviceScanView(appState: AppState) {
                     isDeviceNearby = isDeviceNearby
                 )
             )
-            if (isDeviceNearby) {
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            if (isScanning) {
+                Column {
+                    Text("Scanning for your device...")
+                    if (hasEverScanned) {
+                        Text(
+                            "Last result: ${if (isDeviceNearby) "nearby" else "not nearby"}",
+                            modifier = Modifier.alpha(0.75f)
+                        )
+                    }
+                }
+            } else if (isDeviceNearby) {
                 Text("Your device is nearby!")
-            } else if (!isScanning) {
-                Text("Your device was not found nearby.")
+            } else {
+                Text("Your device is not nearby.")
             }
         }
 
         if (hasEverScanned && !isScanning) {
+            Divider(modifier = Modifier.padding(vertical = 16.dp))
             Text("Next scan in ${nextScan.inWholeSeconds} second(s)")
         }
     }
