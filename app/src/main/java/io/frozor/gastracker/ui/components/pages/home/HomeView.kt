@@ -1,5 +1,6 @@
 package io.frozor.gastracker.ui.components.pages.home
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
@@ -15,7 +16,7 @@ fun HomeView(appState: AppState) {
     val isBluetoothEnabled by appState.bluetoothLeManager.isEnabled.observeAsState()
 
     PageContainer {
-        Card(modifier = Modifier.padding(16.dp)) {
+        Card(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
             if (isBluetoothEnabled != true) {
                 HomeBluetoothNotEnabledView()
             } else {

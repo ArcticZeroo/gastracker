@@ -1,31 +1,35 @@
 package io.frozor.gastracker.api.bluetooth.le
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import io.frozor.gastracker.constants.LoggingTag
+import kotlinx.coroutines.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import kotlin.time.Duration.Companion.seconds
 
-val SCAN_LENGTH = 10.seconds
+val SCAN_LENGTH = 5.seconds
 val SCAN_INTERVAL = 60.seconds
 
 class BluetoothLeManager(private val context: Context) {
     private val _bluetoothManager = context.getSystemService(BluetoothManager::class.java)
     private val _bluetoothLeScanner = _bluetoothManager.adapter.bluetoothLeScanner
-    private var _currentScanJob: Deferred<Boolean>? = null
     private val _isBluetoothEnabled = MutableLiveData(_bluetoothManager.adapter.isEnabled)
 
     private val _btAdapterBroadcastReceiver = object : BroadcastReceiver() {
@@ -53,7 +57,9 @@ class BluetoothLeManager(private val context: Context) {
         context.unregisterReceiver(_btAdapterBroadcastReceiver)
     }
 
-    private suspend fun doIsDeviceNearbyScan(deviceId: String): Boolean {
+    suspend fun isDeviceNearby(deviceId: String): Boolean {
+        Log.i(LoggingTag.Bluetooth, "Checking if device is nearby with id $deviceId")
+
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.BLUETOOTH_SCAN
@@ -62,54 +68,57 @@ class BluetoothLeManager(private val context: Context) {
             return false
         }
 
-        var wasDeviceFound = false
+        return suspendCoroutine { continuation ->
+            var isScanOver = false
 
-        val scanCallback = object : ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                if (result?.device?.address == deviceId) {
-                    wasDeviceFound = true
+            val scanCallback = object : ScanCallback() {
+                @SuppressLint("MissingPermission")
+                override fun onScanResult(callbackType: Int, result: ScanResult?) {
+                    if (result?.device?.address != deviceId) {
+                        Log.e(
+                            LoggingTag.Bluetooth,
+                            "Scan found a device that isn't ours! Filter is broken?"
+                        )
+                        return
+                    }
+
+                    Log.i(LoggingTag.Bluetooth, "Device was found in scan!")
+
+                    if (!isScanOver) {
+                        isScanOver = true
+                        continuation.resume(true)
+                        _bluetoothLeScanner.stopScan(this)
+                    }
+                }
+
+                @SuppressLint("MissingPermission")
+                override fun onScanFailed(errorCode: Int) {
+                    if (!isScanOver) {
+                        isScanOver = true
+                        continuation.resumeWithException(Exception("Scan failed with error code $errorCode"))
+                        _bluetoothLeScanner.stopScan(this)
+                    }
                 }
             }
 
-            override fun onScanFailed(errorCode: Int) {
-                throw Exception("Scan failed with error code $errorCode")
-            }
-        }
+            val scanFilter = ScanFilter.Builder()
+                .setDeviceAddress(deviceId)
+                .build()
 
-        _bluetoothLeScanner.startScan(scanCallback)
-        delay(SCAN_LENGTH)
-        _bluetoothLeScanner.stopScan(scanCallback)
+            val scanSettings = ScanSettings.Builder()
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .build()
 
-        return wasDeviceFound
-    }
+            _bluetoothLeScanner.startScan(listOf(scanFilter), scanSettings, scanCallback)
 
-    suspend fun isDeviceNearby(deviceId: String): Boolean {
-        var scanJob: Deferred<Boolean>? = null
-
-        synchronized(this) {
-            val currentScanJob = _currentScanJob
-            if (currentScanJob != null) {
-                scanJob = currentScanJob
-            }
-        }
-
-        if (scanJob == null) {
-            coroutineScope {
-                synchronized(this) {
-                    scanJob = async { doIsDeviceNearbyScan(deviceId) }
-                    _currentScanJob = scanJob
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(SCAN_LENGTH)
+                if (!isScanOver) {
+                    isScanOver = true
+                    continuation.resume(false)
+                    _bluetoothLeScanner.stopScan(scanCallback)
                 }
             }
         }
-
-        if (scanJob == null) {
-            throw Exception("Threading problem: scan job is null")
-        }
-
-        val foundDevice = scanJob?.await() ?: false
-        synchronized(this) {
-            _currentScanJob = null
-        }
-        return foundDevice
     }
 }
