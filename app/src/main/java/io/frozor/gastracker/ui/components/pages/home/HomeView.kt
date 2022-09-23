@@ -9,7 +9,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.frozor.gastracker.ui.components.pages.PageContainer
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 
 @Composable
 fun HomeView(appState: AppState) {

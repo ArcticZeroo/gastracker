@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import io.frozor.gastracker.constants.Routes
 import io.frozor.gastracker.ui.components.pages.home.HomeView
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 
 fun NavGraphBuilder.homeGraph(navController: NavController, appState: AppState) {
     navigation(startDestination = Routes.Home.Main, route = Routes.Pages.Home) {

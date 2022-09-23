@@ -24,7 +24,7 @@ import io.frozor.gastracker.constants.Styles
 import io.frozor.gastracker.constants.requiredForegroundPermissions
 import io.frozor.gastracker.ui.components.pages.PageContainer
 import io.frozor.gastracker.ui.components.pages.setup.bluetooth.le.BluetoothLeView
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 import io.frozor.gastracker.util.navigateAndReplace
 
 @Composable

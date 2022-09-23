@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.ui.data.BleDevice
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 import io.frozor.gastracker.util.isIBeacon
 
 // probably not needed, I can just use the keBeacon app

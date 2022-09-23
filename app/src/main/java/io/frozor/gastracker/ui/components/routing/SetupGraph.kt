@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import io.frozor.gastracker.constants.Routes
 import io.frozor.gastracker.ui.components.pages.setup.SetupView
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 
 fun NavGraphBuilder.setupGraph(navController: NavController, appState: AppState) {
     navigation(startDestination = Routes.Setup.Main, route = Routes.Pages.Setup) {

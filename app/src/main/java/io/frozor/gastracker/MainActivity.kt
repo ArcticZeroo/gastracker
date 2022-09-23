@@ -16,7 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.ui.components.routing.NavigationRoot
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 import io.frozor.gastracker.ui.theme.GasTrackerTheme
 
 class MainActivity : ComponentActivity() {

@@ -14,7 +14,7 @@ import io.frozor.gastracker.api.bluetooth.le.SCAN_INTERVAL
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.constants.ProgressState
 import io.frozor.gastracker.ui.components.progress.ProgressBubble
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 

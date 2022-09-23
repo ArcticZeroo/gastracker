@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalPermissionsApi::class)
 
-package io.frozor.gastracker.ui.state
+package io.frozor.gastracker.state
 
 import android.content.Context
 import android.util.Log

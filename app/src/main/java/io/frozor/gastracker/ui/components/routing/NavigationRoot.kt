@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import io.frozor.gastracker.constants.LoggingTag
 import io.frozor.gastracker.constants.Routes
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 
 @Composable
 fun NavigationRoot(appState: AppState) {

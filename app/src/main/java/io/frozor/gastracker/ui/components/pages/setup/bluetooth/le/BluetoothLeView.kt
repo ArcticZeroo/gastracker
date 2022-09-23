@@ -6,7 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 
 @Composable
 fun BluetoothLeView(appState: AppState) {

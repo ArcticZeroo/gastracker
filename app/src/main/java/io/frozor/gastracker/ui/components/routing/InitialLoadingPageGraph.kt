@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import io.frozor.gastracker.constants.Routes
 import io.frozor.gastracker.ui.components.pages.initialload.InitialLoadView
-import io.frozor.gastracker.ui.state.AppState
+import io.frozor.gastracker.state.AppState
 
 fun NavGraphBuilder.initialLoadingPageGraph(navController: NavController, appState: AppState) {
     navigation(startDestination = Routes.InitialLoading.Main, route = Routes.Pages.InitialLoading) {
