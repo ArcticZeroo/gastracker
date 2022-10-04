@@ -33,8 +33,7 @@ fun SetupView(navController: NavController, appState: AppState) {
     val requiredPermissionsState =
         rememberMultiplePermissionsState(permissions = requiredForegroundPermissions)
 
-    val hasDeviceIdBeenFetched by appState.hasDeviceIdBeenFetched.observeAsState()
-    val deviceId by appState.deviceId.observeAsState()
+    val deviceId by appState.trackerCompanionManager.associatedDeviceId.observeAsState()
 
     LaunchedEffect(requiredPermissionsState.allPermissionsGranted) {
         appState.updatePermissionStatus()
@@ -50,8 +49,6 @@ fun SetupView(navController: NavController, appState: AppState) {
                 if (!requiredPermissionsState.allPermissionsGranted) {
                     Text("Step 1 of 2: Grant permissions", fontSize = 24.sp)
                     PermissionsView(requiredPermissionsState = requiredPermissionsState)
-                } else if (hasDeviceIdBeenFetched == false) {
-                    Text("Checking if you've already set up a device...")
                 } else if (deviceId == null) {
                     Text("Step 2 of 2: Choose your device", fontSize = 24.sp)
                     BluetoothLeView(appState)
