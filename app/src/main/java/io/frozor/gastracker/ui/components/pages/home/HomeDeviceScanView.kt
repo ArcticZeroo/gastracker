@@ -36,7 +36,7 @@ fun getProgressFromScanState(
 
 @Composable
 fun HomeDeviceScanView(appState: AppState) {
-    val deviceId by appState.deviceId.observeAsState()
+    val deviceId by appState.trackerCompanionManager.associatedDeviceId.observeAsState()
     var hasEverScanned by remember { mutableStateOf(false) }
     var isScanning by remember { mutableStateOf(false) }
     var isDeviceNearby by remember { mutableStateOf(false) }

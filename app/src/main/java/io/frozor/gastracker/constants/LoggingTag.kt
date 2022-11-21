@@ -4,5 +4,6 @@ class LoggingTag {
     companion object {
         val App = "GasTracker"
         val Bluetooth = "$App:Bluetooth"
+        val CompanionService = "$App:CompanionService"
     }
 }

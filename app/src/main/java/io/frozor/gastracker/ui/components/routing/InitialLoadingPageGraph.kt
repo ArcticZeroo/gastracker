@@ -12,19 +12,15 @@ import io.frozor.gastracker.state.AppState
 fun NavGraphBuilder.initialLoadingPageGraph(navController: NavController, appState: AppState) {
     navigation(startDestination = Routes.InitialLoading.Main, route = Routes.Pages.InitialLoading) {
         composable(Routes.InitialLoading.Main) {
-            if (appState.isLoading()) {
-                InitialLoadView()
-            } else {
-                LaunchedEffect(Unit) {
-                    navController.navigate(
-                        if (appState.shouldRunSetup()) {
-                            Routes.Pages.Setup
-                        } else {
-                            Routes.Pages.Home
-                        }
-                    ) {
-                        popUpTo(Routes.Pages.InitialLoading)
+            LaunchedEffect(Unit) {
+                navController.navigate(
+                    if (appState.shouldRunSetup()) {
+                        Routes.Pages.Setup
+                    } else {
+                        Routes.Pages.Home
                     }
+                ) {
+                    popUpTo(Routes.Pages.InitialLoading)
                 }
             }
         }
